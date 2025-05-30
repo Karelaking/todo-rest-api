@@ -1,5 +1,5 @@
 import type { IUser } from "@/types/user.types";
-import type { Request, NextFunction } from "express";
+import type { NextFunction } from "express";
 import type { IRequest } from "@/types/request.type";
 
 import jwt from "jsonwebtoken";
@@ -17,7 +17,6 @@ export const authMiddleware = asyncHandler(
       const token =
         request.headers.authorization?.replace("Bearer ", "") ||
         request.cookies?.accessToken;
-      console.log("token", token);
 
       if (!token) {
         return next(new ApiError(401, "Token not found"));
