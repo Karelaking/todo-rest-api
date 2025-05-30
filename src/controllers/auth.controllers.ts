@@ -1,9 +1,10 @@
 import { User } from "@/models/user.model";
 import { ApiError } from "@/utils/apiError";
-import type { IUser } from "@/models/user.model";
+import type { IUser } from "@/types/user.types";
 import type { Request, Response } from "express";
 import { asyncHandler } from "@/utils/asyncHandler";
 import { ApiResponse } from "@/utils/apiResponse";
+import type { IRequest } from "@/types/request.type";
 
 export class AuthController {
   // Methode for generating access and refresh accessToken
@@ -19,6 +20,7 @@ export class AuthController {
       const refreshToken = user?.generateRefreshToken();
 
       user.accessToken = accessToken;
+      user.refreshToken = refreshToken;
       await user.save({ validateBeforeSave: false });
 
       return { accessToken, refreshToken };
@@ -96,6 +98,10 @@ export class AuthController {
       throw new ApiError(401, "Invalid credentials");
     }
 
+    if (user.accessToken && user.refreshToken) {
+      throw new ApiError(400, "User already logged in");
+    }
+
     const { accessToken, refreshToken } =
       await this.generateAccessAndRefereshTokens(user._id as string); // Generate access and refresh tokens
     console.log("accessToken", accessToken);
@@ -114,11 +120,73 @@ export class AuthController {
       .json(new ApiResponse(200, user, "User logged in successfully"));
   });
 
-  logout = asyncHandler(async (request: Request, response: Response) => {
-    response.send("User logged out");
+  logout = asyncHandler(async (request: IRequest, response: Response) => {
+    const userId = request.user?._id;
+    if (!userId) {
+      throw new ApiError(401, "User not logged in");
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    user.accessToken = "";
+    user.refreshToken = "";
+
+    await user.save({ validateBeforeSave: false });
+
+    response
+      .status(200)
+      .json(new ApiResponse(200, user, "User logged out successfully"));
   });
 
-  delete = asyncHandler(async (request: Request, response: Response) => {
-    response.send("User deleted");
+  delete = asyncHandler(async (request: IRequest, response: Response) => {
+    const userId = request.user?._id;
+    if (!userId) {
+      throw new ApiError(401, "User not logged in");
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    await User.deleteOne({ _id: userId });
+
+    response
+      .status(200)
+      .json(new ApiResponse(200, user, "User deleted successfully"));
+  });
+
+  refreshToken = asyncHandler(async (request: Request, response: Response) => {
+    const { refreshToken } = request.body;
+
+    if (!refreshToken) {
+      throw new ApiError(400, "Refresh token is required");
+    }
+
+    const user = await User.findOne({ refreshToken });
+
+    if (!user) {
+      throw new ApiError(400, "Invalid refresh token");
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } =
+      await this.generateAccessAndRefereshTokens(user._id as string);
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    };
+
+    response
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", newRefreshToken, options)
+      .json(new ApiResponse(200, user, "Refresh token updated successfully"));
   });
 }
