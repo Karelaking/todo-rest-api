@@ -14,7 +14,7 @@ interface IBaseUser extends Document {
 // Interface for user authentication
 interface IUserAuth extends Document {
   email: string[];
-  phone?: number[];
+  phone: number[];
   password: string;
   lastLogin: Date | null;
   loginCount: number;
@@ -55,4 +55,4 @@ interface IUserMethodes {
   incrementFailedAttempts(): Promise<void>;
 }
 
-export type IUser = IBaseUser & IUserAuth & IUserMethodes;
+export  type IUser = IBaseUser & IUserAuth & IUserMethodes;
