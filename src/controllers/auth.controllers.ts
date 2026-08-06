@@ -1,16 +1,17 @@
-import { User } from "@/models/user.model";
-import { ApiError } from "@/utils/apiError";
-import type { IUser } from "@/types/user.types";
+
 import type { Request, Response } from "express";
-import { asyncHandler } from "@/utils/asyncHandler";
-import { ApiResponse } from "@/utils/apiResponse";
-import type { IRequest } from "@/types/request.type";
+import { User } from "../models/user.model.ts";
+import { ApiError } from "../utils/apiError.ts";
+import type { IUser } from "../types/user.types.ts";
+import { asyncHandler } from "../utils/asyncHandler.ts";
+import { ApiResponse } from "../utils/apiResponse.ts";
+import type { IRequest } from "../types/request.type.ts";
 
 export class AuthController {
   // Methode for generating access and refresh accessToken
   generateAccessAndRefereshTokens = async (userId: string) => {
     try {
-      const user = await User.findById(userId);
+      const user: IUser | null = await User.findById(userId);
 
       if (!user) {
         throw new ApiError(404, "User not found");
@@ -57,7 +58,7 @@ export class AuthController {
       throw new ApiError(400, "User already exists");
     }
 
-    const user: IUser = await User.create({
+    const user = await User.create({
       email,
       lastName,
       userName,

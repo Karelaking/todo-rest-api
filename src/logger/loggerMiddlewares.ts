@@ -1,4 +1,4 @@
-import type { LoggerInstance, RequestWithLogger } from "@/logger/loggerTypes";
+import type { LoggerInstance, RequestWithLogger } from "./loggerTypes.ts";
 
 /**
  * Express/Bun middleware for automatic request logging

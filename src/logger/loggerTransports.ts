@@ -2,9 +2,9 @@ import winston from "winston";
 import { join } from "path";
 import DailyRotateFile from "winston-daily-rotate-file";
 import { ElasticsearchTransport } from "winston-elasticsearch";
-import { createConsoleFormat, createJsonFormat } from "@/logger/loggerFormatters";
-import type { LoggerConfig } from "@/logger/loggerTypes";
-import { mkdir, exists } from "fs/promises";
+import { createConsoleFormat, createJsonFormat } from "./loggerFormatters.ts";
+import type { LoggerConfig } from "./loggerTypes.ts";
+import { access, mkdir } from "fs/promises";
 
 /**
  * Create the appropriate transports based on configuration
@@ -25,7 +25,14 @@ export const createTransports = async (config: LoggerConfig) => {
   // File transports with daily rotation
   if (config.fileLogging) {
     // Ensure log directory exists
-    if (!(await exists(config.logDirectory))) {
+    let logDirectoryExists = true;
+    try {
+      await access(config.logDirectory);
+    } catch {
+      logDirectoryExists = false;
+    }
+
+    if (!logDirectoryExists) {
       await mkdir(config.logDirectory, { recursive: true });
     }
 

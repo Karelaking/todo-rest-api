@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
-import { app } from "@/app";
-import { config } from "@/config";
-import { dbConnection } from "@/database/dbConnection";
+import  {app}  from "./app.ts";
+import { config } from "./config.ts";
+import { dbConnection } from "./database/dbConnection.ts";
 
-dotenv.config();
 
 const { database } = config;
 

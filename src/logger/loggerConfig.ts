@@ -1,4 +1,4 @@
-import type { LoggerConfig } from "@/logger/loggerTypes";
+import type { LoggerConfig } from "./loggerTypes.ts";
 
 /**
  * Default configuration with environment variable overrides

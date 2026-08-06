@@ -1,8 +1,8 @@
 import winston from "winston";
-import type { LoggerConfig, LoggerInstance, LogContext } from "@/logger/loggerTypes";
-import { getLoggerConfig } from "@/logger/loggerConfig";
-import { createTransports } from "@/logger/loggerTransports";
-import { createRequestMiddleware, createErrorMiddleware } from "@/logger/loggerMiddlewares";
+import type { LoggerConfig, LoggerInstance, LogContext } from "./loggerTypes.ts";
+import { getLoggerConfig } from "./loggerConfig.ts";
+import { createRequestMiddleware, createErrorMiddleware } from "./loggerMiddlewares.ts";
+import { createTransports } from "./loggerTransports.ts";
 
 /**
  * Create a fully configured Winston logger instance

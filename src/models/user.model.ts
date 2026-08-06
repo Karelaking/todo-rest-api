@@ -1,8 +1,8 @@
+import { model, Schema } from "mongoose";
+import type { IUser } from "../types/user.types.ts";
 import bcrypt from "bcryptjs";
+import { config } from "../config.ts";
 import jwt from "jsonwebtoken";
-import { config } from "@/config";
-import type { IUser } from "@/types/user.types";
-import { Schema, model } from "mongoose";
 
 const userSchema: Schema<IUser> = new Schema<IUser>(
   {

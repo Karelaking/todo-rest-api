@@ -1,9 +1,10 @@
-import { User } from "@/models/user.model";
-import { ApiError } from "@/utils/apiError";
-import { asyncHandler } from "@/utils/asyncHandler";
 
-import type { IRequest } from "@/types/request.type";
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Response } from "express";
+import { User } from "../models/user.model.ts";
+import { ApiError } from "../utils/apiError.ts";
+import { asyncHandler } from "../utils/asyncHandler.ts";
+import type { IRequest } from "../types/request.type.ts";
+import type { IUser } from "../types/user.types.ts";
 
 export class UserController {
   // Methode for getting user
@@ -18,7 +19,7 @@ export class UserController {
       }
 
       try {
-        const user = await User.findById(request?.user?._id);
+        const user: IUser | null = await User.findById(request?.user?._id);
 
         if (!user) {
           return next(new ApiError(401, "User not found"));
@@ -77,14 +78,14 @@ export class UserController {
 
   addAddress = asyncHandler(
     async (request: IRequest, response: Response, next: NextFunction) => {
-      const newAddress = request.body.address as string;
+      const newAddress: IUser['address'][number] = { ...request.body.address };
 
       if (!newAddress) {
         return next(new ApiError(400, "Address is required"));
       }
 
       try {
-        const user = await User.findById(request?.user?._id);
+        const user: IUser | null = await User.findById(request?.user?._id);
 
         if (!user) {
           return next(new ApiError(401, "User not found"));
@@ -114,7 +115,7 @@ export class UserController {
       }
 
       try {
-        const user = await User.findById(request?.user?._id);
+        const user: IUser | null = await User.findById(request?.user?._id);
 
         if (!user) {
           return next(new ApiError(401, "User not found"));
@@ -154,7 +155,7 @@ export class UserController {
       }
 
       try {
-        const user = await User.findById(userId);
+        const user: IUser | null = await User.findById(userId);
 
         if (!user) {
           return next(new ApiError(401, "User not found"));
@@ -197,7 +198,7 @@ export class UserController {
       }
 
       try {
-        const user = await User.findById(userId);
+        const user: IUser | null = await User.findById(userId);
 
         if (!user) {
           return next(new ApiError(401, "User not found"));
@@ -217,7 +218,7 @@ export class UserController {
 
   changeAddress = asyncHandler(
     async (request: IRequest, response: Response, next: NextFunction) => {
-      const newAddress = request.body.address as string;
+      const newAddress: IUser['address'][number] = { ...request.body.address };
       const index = Number(request.query.index) || (1 as number);
       const userId = request?.user?._id;
 
@@ -234,7 +235,7 @@ export class UserController {
       }
 
       try {
-        const user = await User.findById(userId);
+        const user: IUser | null = await User.findById(userId);
 
         if (!user) {
           return next(new ApiError(401, "User not found"));
@@ -286,7 +287,7 @@ export class UserController {
       }
 
       try {
-        const user = await User.findById(userId);
+        const user: IUser | null = await User.findById(userId);
 
         if (!user) {
           return next(new ApiError(401, "User not found"));
@@ -325,7 +326,7 @@ export class UserController {
       }
 
       try {
-        const user = await User.findById(userId);
+        const user: IUser | null = await User.findById(userId);
 
         if (!user) {
           return next(new ApiError(401, "User not found"));
@@ -367,7 +368,7 @@ export class UserController {
       }
 
       try {
-        const user = await User.findById(userId);
+        const user: IUser | null = await User.findById(userId);
 
         if (!user) {
           return next(new ApiError(401, "User not found"));
@@ -398,7 +399,7 @@ export class UserController {
   deleteAvatar = asyncHandler(
     async (request: IRequest, response: Response, next: NextFunction) => {
       try {
-        const user = await User.findById(request?.user?._id);
+        const user: IUser | null = await User.findById(request?.user?._id);
         if (!user) {
           return next(new ApiError(401, "User not found"));
         }
@@ -432,7 +433,7 @@ export class UserController {
       }
 
       try {
-        const user = await User.findById(userId);
+        const user: IUser | null = await User.findById(userId);
 
         if (!user) {
           return next(new ApiError(401, "User not found"));
@@ -468,7 +469,7 @@ export class UserController {
       }
 
       try {
-        const user = await User.findById(userId);
+        const user: IUser | null = await User.findById(userId);
 
         if (!user) {
           return next(new ApiError(401, "User not found"));

@@ -8,7 +8,7 @@ export const config = {
     port: process.env.PORT || 3000,
     databaseName: process.env.DB_NAME || "test",
     timeOut: Number(process.env.DB_TIMEOUT) || 20000,
-    dbURL: process.env.DB_URL || "mongodb://localhost:27017/test",
+    dbURL: process.env.DB_URL || "mongodb://127.0.0.1:27017/todo-db",
   },
   // jwt token configuration for authentication
   jwtToken: {

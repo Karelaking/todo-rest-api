@@ -9,6 +9,16 @@ interface IBaseUser extends Document {
   email: string;
   password: string;
   profileImage?: string;
+  phone: number;
+  address: [
+    {
+      street: string;
+      city: string;
+      state: string;
+      zipCode: string;
+      country: string;
+    },
+  ];
 }
 
 // Interface for user authentication
